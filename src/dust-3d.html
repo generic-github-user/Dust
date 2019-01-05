@@ -1,0 +1,82 @@
+<html>
+	<head>
+		<title>Dust 3D</title>
+		<style>
+			body { margin: 0; }
+			canvas { width: 100%; height: 100% }
+		</style>
+	</head>
+	<body>
+		<!-- Import Three.js library -->
+		<script type="text/javascript" src="https://threejs.org/build/three.js"></script>
+		<!-- Local JavaScript for program (embedded in HTML so that whole program can be run in one file) -->
+		<script type="text/javascript">
+			//Create scene
+			var scene = new THREE.Scene();
+			//Set background color to white
+			scene.background = new THREE.Color(0xffffff);
+			//Create camera
+			var camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+
+			//Create renderer
+			var renderer = new THREE.WebGLRenderer();
+			renderer.setSize( window.innerWidth, window.innerHeight );
+			document.body.appendChild( renderer.domElement );
+
+			//Create 2 point lights to illuminate scene
+			var light = new THREE.DirectionalLight(0xffffff, 1);
+			light.position.set(0, 100, 0);
+			scene.add(light);
+			var light = new THREE.DirectionalLight(0xffffff, 1);
+			light.position.set(0, -100, 0);
+			scene.add(light);
+
+			var rotationAxis = new THREE.Vector3(0, 0, 0);
+			// Create time variable and set to 0; will be used when calculating camera position
+			var time = 0;
+			var resolution = 25;
+			// Set camera distance from center of scene (0, 0, 0)
+			camera.position.z = 20;
+
+			var animate = function () {
+				requestAnimationFrame(animate);
+
+				for (var i = 0; i < 100; i ++) {
+					var x = Math.random() * resolution;
+					var y = Math.random() * resolution;
+					var z =Math.random() * resolution;
+
+					var distance = Math.sqrt(((resolution / 2) - x) ** 2 + ((resolution / 2) - y) ** 2 + ((resolution / 2) - z) ** 2);
+
+					if((Math.random() * distance ** 3) < 5){
+
+						var size = 0.1;
+						var geometry = new THREE.BoxGeometry(size, size, size);
+						var color = new THREE.Color("hsl(0, 0%, 0%)");
+						var material = new THREE.MeshStandardMaterial({color: color});
+						//material.transparent = true;
+						//material.opacity = 0.75;
+						var cube = new THREE.Mesh(geometry, material);
+
+						//Set cube position
+						cube.position.x = Math.round(((x / resolution * 25) - (resolution / 2) + (Math.random() * (x / resolution * 5))) * 10) / 10;
+						cube.position.y = Math.round(((y / resolution * 25) - (resolution / 2) + (Math.random() * (y / resolution * 5))) * 10) / 10;
+						cube.position.z = Math.round(((z / resolution * 25) - (resolution / 2) + (Math.random() * (z / resolution * 5))) * 10) / 10;
+
+						scene.add(cube);
+
+					}
+				}
+
+				camera.position.x = rotationAxis.x + ((Math.sin(0.005 * time) * 5) + 10) * Math.cos(0.01 * time);
+				camera.position.z = rotationAxis.z + ((Math.sin(0.005 * time) * 5) + 10) * Math.sin(0.01 * time);
+				camera.lookAt(rotationAxis);
+
+				renderer.render(scene, camera);
+				time ++;
+			};
+
+			animate();
+		</script>
+	</body>
+</html>
