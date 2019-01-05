@@ -1,0 +1,47 @@
+<html>
+<head>
+<title>
+Weighted Probability "Dust"
+</title>
+</head>
+<body>
+<canvas id="canvas" width="1400" height="750"></canvas>
+<script type="text/javascript">
+
+var focusX = 700; //Focus point of the randomization (x)
+var focusY = 350; //Focus point of the randomization (y)
+var chunkSize = 250; //Size of a rendering "chunk" (helps program run faster)
+
+function drawPoint(){ //Draws new point
+
+		var canvas = document.getElementById("canvas");
+		var ctx = canvas.getContext("2d"); 
+		
+		var x = Math.round(Math.random() * 1400);
+		var y = Math.round(Math.random() * 750);
+		var distance = Math.sqrt(Math.pow((x - focusX),2) + Math.pow((y - focusY),2));
+		
+		if(distance * Math.random() * 5 < 10){
+		
+			ctx.beginPath();
+			ctx.fillRect(x,y,1,1);
+			
+			ctx.fillStyle = "rgba(0,0,0,1)";
+			ctx.fill();
+		
+		}
+		
+	}
+	
+function runChunk(){ //Runs rendering "chunk"
+	for(v=0;v<chunkSize;v++){
+		drawPoint();
+	}
+}
+	
+var intervalID = window.setInterval(runChunk,1); //Executes each rendering "chunk" on a timer
+	
+</script>
+
+</body>
+</html>
